@@ -1,5 +1,5 @@
 # HorizontalProgress
-===============
+---
 
 <img src="HorizontalProgress-demo.gif" width="234" height="81" />
 
