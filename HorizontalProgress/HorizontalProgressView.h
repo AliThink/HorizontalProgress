@@ -9,30 +9,29 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, ProgressLevelTextPosition) {
-    topPostion = 0,
-    bottomPosition = 1
+    topPostion,
+    bottomPosition
 };
 
 @interface HorizontalProgressView : UIView
 
 //Color of progress unachieved
-@property(nonatomic, copy) UIColor *unachievedColor;
+@property(nonatomic, strong) UIColor *unachievedColor;
 //Color of progress achieved
-@property(nonatomic, copy) UIColor *achievedColor;
+@property(nonatomic, strong) UIColor *achievedColor;
 //Maximum progress point radius
-@property CGFloat pointMaxRadius;
+@property(nonatomic, assign) CGFloat pointMaxRadius;
 //Maximum progress line height
-@property NSUInteger lineMaxHeight;
+@property(nonatomic, assign) NSUInteger lineMaxHeight;
 //Current progress level
-@property NSInteger currentLevel;
+@property(nonatomic, assign) NSInteger currentLevel;
 //Current progress animation duration
-@property CFTimeInterval animationDuration;
+@property(nonatomic, assign) CFTimeInterval animationDuration;
 //Tip label position relative to progress line
-@property ProgressLevelTextPosition textPosition;
+@property(nonatomic, assign) ProgressLevelTextPosition textPosition;
 
 //Array contained strings of progress tip label
-//NSString elements only
-@property(nonatomic, copy) NSArray *progressLevelArray;
+@property(nonatomic, strong) NSArray<NSString *> *progressLevelArray;
 
 //Progress fill animation start
 - (void)startAnimation;

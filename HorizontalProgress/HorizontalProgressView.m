@@ -11,11 +11,15 @@
 #define PROGRESS_PADDING 8
 #define PROGRESS_TIPLABEL_HEIGHT 30
 
-@implementation HorizontalProgressView {
-    CAShapeLayer *maskLayer;
-    CAShapeLayer *moveLayer;
-    UIView *aboveView;
-}
+@interface HorizontalProgressView ()
+
+@property(nonatomic, strong) CAShapeLayer *maskLayer;
+@property(nonatomic, strong) CAShapeLayer *moveLayer;
+@property(nonatomic, strong) UIView *aboveView;
+
+@end
+
+@implementation HorizontalProgressView
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -34,7 +38,7 @@
 }
 
 - (void)intialConfig {
-    maskLayer = [CAShapeLayer layer];
+    self.maskLayer = [CAShapeLayer layer];
 }
 
 - (void)layoutSubviews {
@@ -44,18 +48,18 @@
     
     [self configElementsOnAbove:NO];
     
-    aboveView = [[UIView alloc] initWithFrame:self.bounds];
-    aboveView.backgroundColor = [UIColor clearColor];
-    maskLayer.frame = aboveView.bounds;
-    [self addSubview:aboveView];
+    self.aboveView = [[UIView alloc] initWithFrame:self.bounds];
+    self.aboveView.backgroundColor = [UIColor clearColor];
+    self.maskLayer.frame = self.aboveView.bounds;
+    [self addSubview:self.aboveView];
     
     [self configElementsOnAbove:YES];
-    [self bringSubviewToFront:aboveView];
+    [self bringSubviewToFront:self.aboveView];
     [self configMask];
 }
 
 - (void)configElementsOnAbove:(BOOL)flag {
-    if ([self.progressLevelArray count] == 0) {
+    if (!self.progressLevelArray.count) {
         return;
     }
     
@@ -110,11 +114,7 @@
     }
     pointView.layer.cornerRadius = frame.size.width / 2.0;
     
-    if (aboveFlag) {
-        [aboveView addSubview:pointView];
-    } else {
-        [self addSubview:pointView];
-    }
+    aboveFlag ? [self.aboveView addSubview:pointView] : [self addSubview:pointView];
 }
 
 - (void)generateUnitLineWithFrame:(CGRect)frame
@@ -127,11 +127,7 @@
         lineView.backgroundColor = self.unachievedColor ? self.unachievedColor : [UIColor lightGrayColor];
     }
     
-    if (aboveFlag) {
-        [aboveView addSubview:lineView];
-    } else {
-        [self addSubview:lineView];
-    }
+    aboveFlag ? [self.aboveView addSubview:lineView] : [self addSubview:lineView];
 }
 
 - (void)generateTipLabelWithFrame:(CGRect)frame
@@ -149,34 +145,31 @@
     } else {
         tipLabel.textColor = self.unachievedColor ? self.unachievedColor : [UIColor lightGrayColor];
     }
-    if (aboveFlag) {
-        [aboveView addSubview:tipLabel];
-    } else {
-        [self addSubview:tipLabel];
-    }
+    
+    aboveFlag ? [self.aboveView addSubview:tipLabel] : [self addSubview:tipLabel];
 }
 
 - (void)configMask {
-    moveLayer = [CAShapeLayer layer];
-    moveLayer.bounds = aboveView.bounds;
-    moveLayer.fillColor = [[UIColor blackColor] CGColor];
-    moveLayer.path = [UIBezierPath bezierPathWithRect:aboveView.bounds].CGPath;
-    moveLayer.opacity = 0.8;
-    moveLayer.position = CGPointMake(-aboveView.bounds.size.width / 2.0, aboveView.bounds.size.height / 2.0);
-    [maskLayer addSublayer:moveLayer];
+    self.moveLayer = [CAShapeLayer layer];
+    self.moveLayer.bounds = self.aboveView.bounds;
+    self.moveLayer.fillColor = [[UIColor blackColor] CGColor];
+    self.moveLayer.path = [UIBezierPath bezierPathWithRect:self.aboveView.bounds].CGPath;
+    self.moveLayer.opacity = 0.8;
+    self.moveLayer.position = CGPointMake(-self.aboveView.bounds.size.width / 2.0, self.aboveView.bounds.size.height / 2.0);
+    [self.maskLayer addSublayer:self.moveLayer];
     
-    aboveView.layer.mask = maskLayer;
+    self.aboveView.layer.mask = self.maskLayer;
 }
 
 - (void)startAnimation {
-    moveLayer.position = CGPointMake(aboveView.bounds.size.width / 2.0, aboveView.bounds.size.height / 2.0);
+    self.moveLayer.position = CGPointMake(self.aboveView.bounds.size.width / 2.0, self.aboveView.bounds.size.height / 2.0);
     CABasicAnimation *rightAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
-    rightAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(-aboveView.bounds.size.width / 2.0, aboveView.bounds.size.height / 2.0)];
-    rightAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(aboveView.bounds.size.width / 2.0, aboveView.bounds.size.height / 2.0)];
+    rightAnimation.fromValue = [NSValue valueWithCGPoint:CGPointMake(-self.aboveView.bounds.size.width / 2.0, self.aboveView.bounds.size.height / 2.0)];
+    rightAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.aboveView.bounds.size.width / 2.0, self.aboveView.bounds.size.height / 2.0)];
     rightAnimation.duration = self.animationDuration ? self.animationDuration : 5;
     rightAnimation.repeatCount = 0;
     rightAnimation.removedOnCompletion = NO;
-    [moveLayer addAnimation:rightAnimation forKey:@"rightAnimation"];
+    [self.moveLayer addAnimation:rightAnimation forKey:@"rightAnimation"];
 }
 
 @end
